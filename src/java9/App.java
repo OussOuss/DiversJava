@@ -8,6 +8,7 @@ import java.util.stream.IntStream;
 public class App implements MonIterface {
 
 	public static void main(String[] args) {
+		System.out.println(0.9-0.8);
 		// Java 9 on a pas droit de déclarer des variables avec _
 		// int _ = 9;
 		int _number = 9;

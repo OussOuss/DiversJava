@@ -1,9 +1,11 @@
 package java8;
 
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -25,7 +27,7 @@ public class Streams {
 		System.out.println("----------- Demo Stream  : -----------");
 
 		// Si au moins il existe une personne mariée dans le stream
-		if (listPersons.stream().anyMatch(Person::isMarried)) {
+		if (listPersons.stream().peek(System.out::println).anyMatch(Person::isMarried)) {
 			System.out.println("Une personne est mariée !!");
 		}
 
@@ -39,7 +41,12 @@ public class Streams {
 
 		// Rechercher une personne mariée sinon afficher un message d'erreur
 		Optional<Person> personMarried = listPersons.stream().filter(Person::isMarried).findAny();
-		personMarried.ifPresent(person -> System.out.println("Nom de la personne mariée trouvée: " + person.getName()));
+		personMarried
+				.ifPresent(person -> System.out.println("Nom de la personne mariée trouvée: " + person.getName()));
+
+		// Utilisation de la m�thode concat de String
+		String s = Stream.of("this", "is", "a", "list").reduce("", String::concat);
+		System.out.println(s);
 
 		// Récuperer l'id maximum d'une personne
 		Optional<Integer> maximumIdPersons = listPersons.stream().map(Person::getId).reduce(Integer::max);
@@ -72,6 +79,10 @@ public class Streams {
 				.collect(Collectors.groupingBy(Person::getType));
 		System.out.println("Nombre de femmes dans la map est " + personsByType.get(TypePersonne.Madame).size());
 
+		// Grouper par taille de pr�nom
+		System.out.println("Grouper par taille de pr�nom:");
+		listPersons.stream().map(Person::getName).collect(Collectors.groupingBy(String::length, Collectors.counting()))
+				.forEach((len, num) -> System.out.printf("%d: %d%n", len, num));
 		// Grouper par age
 		Map<AgePersonne, List<Person>> personsById = listPersons.stream()
 				.collect(Collectors.groupingBy(Person::groupByAge));
@@ -121,27 +132,26 @@ public class Streams {
 				.size();
 		System.out.println("Nombre de personne mariées en utilisant le partion est :" + nombrePersonneMariees);
 
-		//count the number of persons
+		// count the number of persons
 		streamPersons = Stream.of(person1, person2, person3, person4);
 		long persons = streamPersons.count();
 		System.out.println("nombre de personne est :" + persons);
 
-		//Calculate the average of age persons
+		// Calculate the average of age persons
 		streamPersons = Stream.of(person1, person2, person3, person4);
 		double avergaePersons = streamPersons.collect(Collectors.averagingInt(Person::getAge));
 		System.out.println("moyenne de l'age des personnes est :" + avergaePersons);
-		
-		//the level of Grouping
+
+		// the level of Grouping
 		Map<TypePersonne, Map<AgePersonne, List<Person>>> personsByAge = listPersons.stream()
-				.collect(Collectors.groupingBy(Person::getType,Collectors.groupingBy(Person::groupByAge)));
+				.collect(Collectors.groupingBy(Person::getType, Collectors.groupingBy(Person::groupByAge)));
 		System.out.println("Nombre de personne femme dans la map est " + personsByAge.get(TypePersonne.Madame).size());
-		
-		//Counting by type Madame/Monsieur
-		Map<TypePersonne, Long> nbrTypePerson= listPersons.stream()
-				.collect(Collectors.groupingBy(Person::getType,Collectors.counting()));
+
+		// Counting by type Madame/Monsieur
+		Map<TypePersonne, Long> nbrTypePerson = listPersons.stream()
+				.collect(Collectors.groupingBy(Person::getType, Collectors.counting()));
 		System.out.println("Nombre de personne femme dans la map est " + nbrTypePerson.get(TypePersonne.Madame));
 
-		
 		System.out.println();
 
 	}
