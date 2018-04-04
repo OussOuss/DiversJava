@@ -188,6 +188,12 @@ public class LambdaExpressions {
 		return counter;
 	}
 
+	@FunctionalInterface
+	interface Predicate<T>{
+		boolean test(T t);
+	}
+	
+	
 	// Méthode qui montre l'utlisation de Consumer
 	public static void consumerForEach(List<Person> persons, Consumer<Person> consumer) {
 		for (Person person : persons) {
