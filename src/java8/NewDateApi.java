@@ -10,8 +10,16 @@ import java.time.Period;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalAccessor;
+import java.time.temporal.TemporalAdjuster;
 import java.time.temporal.TemporalAdjusters;
+import java.time.temporal.TemporalQueries;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.stream.IntStream;
 
 /**
  * The java.time classes are immutable, any instance method that seems to modify
@@ -27,7 +35,9 @@ public class NewDateApi {
 
 		// creatingDateTimeForExistantInstance();
 
-		adjustersAndQueries();
+		// adjustersAndQueries();
+
+		convertDateToLocalDate();
 	}
 
 	private static void basicDateTimeClasses() {
@@ -158,10 +168,16 @@ public class NewDateApi {
 	 * ways to implement your own
 	 */
 	private static void adjustersAndQueries() {
-		
+
 		try {
 			adjusters();
-		}catch(Exception ex) {
+
+			payDay();
+
+			queries();
+
+			worldCupDay();
+		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
 	}
@@ -169,10 +185,84 @@ public class NewDateApi {
 	private static void adjusters() throws Exception {
 		LocalDateTime start = LocalDateTime.of(2017, Month.FEBRUARY, 2, 11, 30);
 		LocalDateTime end = start.with(TemporalAdjusters.firstDayOfNextMonth());
-		System.out.println("2017-03-01T11:30"+ end.toString());
+		System.out.println("2017-03-01T11:30" + end.toString());
 		end = start.with(TemporalAdjusters.next(DayOfWeek.THURSDAY));
-		System.out.println("2017-02-09T11:30"+ end.toString());
+		System.out.println("2017-02-09T11:30" + end.toString());
 		end = start.with(TemporalAdjusters.previousOrSame(DayOfWeek.THURSDAY));
-		System.out.println("2017-02-02T11:30"+ end.toString());
+		System.out.println("2017-02-02T11:30" + end.toString());
+	}
+
+	/**
+	 * Exemple de personalisation du TemporalAdjuster On recupere la date de paye
+	 * qui est le dernier jour ouvrable du mois
+	 *
+	 */
+	private class PaydayAdjuster implements TemporalAdjuster {
+		public Temporal adjustInto(Temporal input) {
+			LocalDate date = LocalDate.from(input);
+			int day = date.with(TemporalAdjusters.lastDayOfMonth()).getDayOfMonth();
+
+			date = date.withDayOfMonth(day);
+			if (date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY) {
+				date = date.with(TemporalAdjusters.previous(DayOfWeek.FRIDAY));
+			}
+			return input.with(date);
+		}
+	}
+
+	private static void payDay() throws Exception {
+		TemporalAdjuster adjuster = new NewDateApi().new PaydayAdjuster();
+		IntStream.of(1).mapToObj(day -> LocalDate.of(2018, Month.APRIL, day))
+				.forEach(date -> System.out.println(date.with(adjuster).getDayOfMonth()));
+	}
+
+	private static void queries() throws Exception {
+		System.out.println(ChronoUnit.DAYS + " " + LocalDate.now().query(TemporalQueries.precision()));
+		System.out.println(ChronoUnit.NANOS + " " + LocalTime.now().query(TemporalQueries.precision()));
+		System.out.println(ZoneId.systemDefault() + " " + ZonedDateTime.now().query(TemporalQueries.zone()));
+		System.out.println(ZoneId.systemDefault() + " " + ZonedDateTime.now().query(TemporalQueries.zoneId()));
+	}
+
+	/**
+	 * Méthode qui retourne le nombre de jours restant par rapport à une date
+	 */
+	private static long daysUntilWorldCup(TemporalAccessor temporal) {
+		int day = temporal.get(ChronoField.DAY_OF_MONTH);
+		int month = temporal.get(ChronoField.MONTH_OF_YEAR);
+		int year = temporal.get(ChronoField.YEAR);
+		LocalDate date = LocalDate.of(year, month, day);
+		LocalDate tlapd = LocalDate.of(year, Month.JUNE, 14);
+		if (date.isAfter(tlapd)) {
+			tlapd = tlapd.plusYears(4);
+		}
+		return ChronoUnit.DAYS.between(date, tlapd);
+	}
+
+	private static void worldCupDay() throws Exception {
+		IntStream.of(5).mapToObj(n -> LocalDate.of(2018, Month.APRIL, n))
+				.forEach(date -> System.out.println(date.query(NewDateApi::daysUntilWorldCup)));
+	}
+
+	private static void convertDateToLocalDate() {
+		try {
+			Date date = new Date();
+			java.sql.Date sqlDate = new java.sql.Date(date.getTime());
+			Calendar calendar = Calendar.getInstance();
+			LocalDate localDate = null;
+			// Java8
+			localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+			// Java9
+			localDate = LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
+
+			// Sql Date
+			localDate = sqlDate.toLocalDate();
+
+			// Calendar
+			ZonedDateTime zonedDateTime = ZonedDateTime.ofInstant(calendar.toInstant(),
+					calendar.getTimeZone().toZoneId());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 }
