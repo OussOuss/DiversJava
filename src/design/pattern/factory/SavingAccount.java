@@ -1,0 +1,14 @@
+package otahiri.design.pattern.factory;
+
+/**
+ * @author otahiri
+ *
+ */
+public class SavingAccount implements Account{
+
+	@Override
+	public void accountType() {
+		System.out.println("SAVING ACCOUNT");
+	}
+
+}
