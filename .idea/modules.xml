@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/DiversJava9.iml" filepath="$PROJECT_DIR$/DiversJava9.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DiversJava.iml" filepath="$PROJECT_DIR$/DiversJava.iml" />
     </modules>
   </component>
 </project>
