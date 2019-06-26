@@ -1,13 +1,6 @@
 package examples;
 
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -214,10 +207,7 @@ interface TriFunction<T, U, S, R> {
 
 	/**
 	 * Applies this function to the given arguments.
-	 * 
-	 * @param <T>
-	 * @param <U>
-	 * @param <S>
+	 *
 	 *
 	 * @param t
 	 *            the first function argument
