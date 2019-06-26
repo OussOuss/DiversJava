@@ -27,6 +27,14 @@ public class ToListCollector<T> implements Collector<T, List<T>, List<T>> {
         Stream<Person> streamPersons = Stream.of(person1, person2, person3, person4);
         List<Person> personList = streamPersons.collect(new ToListCollector<Person>());
         personList.forEach( p -> System.out.println(p));
+
+        streamPersons = Stream.of(person1, person2, person3, person4);
+       // On peut ne pas implémenter l'interface Collector est utiliser cette implémentation
+        personList = streamPersons.collect(
+                ArrayList::new,
+                List::add,
+                List::addAll);
+        personList.forEach( p -> System.out.println(p));
     }
 
     @Override
