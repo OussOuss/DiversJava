@@ -1,4 +1,4 @@
-package examples;
+package examples.optional;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;

@@ -1,10 +1,11 @@
-package examples;
+package examples.stream;
 
+import examples.model.Person;
+import examples.model.Person.*;
 import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 

@@ -1,5 +1,7 @@
-package examples;
+package examples.stream;
 
+import examples.model.Person;
+import examples.model.Person.TypePersonne;
 import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;

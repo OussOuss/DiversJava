@@ -1,4 +1,4 @@
-package examples;
+package examples.model;
 
 public class Person {
 
@@ -76,13 +76,13 @@ public class Person {
 			return AgePersonne.Vieux;
 		}
 	}
+	public enum TypePersonne {
+		Monsieur, Madame
+	}
 
+	public enum AgePersonne {
+		Mineur,Jeune,Vieux
+	}
 }
 
-enum TypePersonne {
-	Monsieur, Madame
-}
 
-enum AgePersonne {
-	Mineur,Jeune,Vieux
-}

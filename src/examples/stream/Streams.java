@@ -1,11 +1,12 @@
-package examples;
+package examples.stream;
 
+import examples.model.Person;
+import examples.model.Person.AgePersonne;
+import examples.model.Person.TypePersonne;
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -44,7 +45,7 @@ public class Streams {
 		personMarried
 				.ifPresent(person -> System.out.println("Nom de la personne mariée trouvée: " + person.getName()));
 
-		// Utilisation de la m�thode concat de String
+		// Utilisation de la methode concat de String
 		String s = Stream.of("this", "is", "a", "list").reduce("", String::concat);
 		System.out.println(s);
 

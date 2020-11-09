@@ -1,4 +1,4 @@
-package examples;
+package examples.date;
 
 import java.time.DayOfWeek;
 import java.time.Instant;
